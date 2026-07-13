@@ -9,7 +9,7 @@ test('First User signup and create project', async ({ page }) => {
   // Fill sign up form
   await page.getByRole('textbox', { name: 'Email*' }).fill('user1@example.com');
   await page.getByRole('textbox', { name: 'User name*' }).fill('user1');
-  await page.getByRole('textbox', { name: 'Password Password' }).fill('password');
+  await page.getByRole('textbox', { name: 'Password', exact: true }).fill('password');
   await page.getByRole('textbox', { name: 'Password (confirm)' }).fill('password');
 
   // Sign up

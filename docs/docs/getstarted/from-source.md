@@ -28,34 +28,39 @@ Place the .env file at `backend/.env`.
 FRONTEND_ORIGIN=http://localhost:8000
 ```
 
-Move to backend directory, then install dependencies.
+Install dependencies from the repository root (this is a pnpm workspace, so a single install covers both backend and frontend).
+
+```bash
+pnpm install
+```
+
+Move to the backend directory to build and run it.
 
 ```bash
 cd backend
-npm install
 ```
 
 Build backend code.
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Initialize the database with the following command.
 
 ```bash
-npm run migrate
+pnpm run migrate
 ```
 
 Start backend server.
 
 ```bash
-npm run start
+pnpm run start
 ```
 
 ## Run frontend server
 
-Move to frontend directory, then install dependencies.
+Move to the frontend directory.
 
 Place the .env file at `frontend/.env`.
 
@@ -65,17 +70,16 @@ NEXT_PUBLIC_BACKEND_ORIGIN=http://localhost:8001
 
 ```bash
 cd frontend
-npm install
 ```
 
 Build frontend code
 
 ```bash
-npm run build
+pnpm run build
 ```
 
 Start frontend server
 
 ```bash
-npm run start
+pnpm run start
 ```

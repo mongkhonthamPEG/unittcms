@@ -9,15 +9,15 @@ Following commands are useful for unittcms development.
 
 ## Frontend
 
-| commands      | description                         |
-| ------------- | ----------------------------------- |
-| `npm run dev` | Start frontend server with dev mode |
+| commands       | description                          |
+| -------------- | ------------------------------------- |
+| `pnpm run dev` | Start frontend server with dev mode |
 
 ## Backend
 
-| commands          | description                        |
-| ----------------- | ---------------------------------- |
-| `npm run dev`     | Start backend server with dev mode |
-| `npm run migrate` | Set up database                    |
-| `npm run drop`    | Drop tables                        |
-| `npm run seed`    | Insert seed data                   |
+| commands            | description                         |
+| ------------------- | ------------------------------------ |
+| `pnpm run dev`      | Start backend server with dev mode |
+| `pnpm run migrate`  | Set up database                    |
+| `pnpm run drop`     | Drop tables                        |
+| `pnpm run seed`     | Insert seed data                   |

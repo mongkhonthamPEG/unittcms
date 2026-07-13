@@ -7,10 +7,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
  * Playwright config for non-Docker E2E tests.
  *
  * Before running, ensure:
- *   - npm install is run in the root, backend, and frontend directories
- *   - playwright is installed: npx playwright install --with-deps
+ *   - pnpm install is run at the repo root (installs backend and frontend too)
+ *   - playwright is installed: pnpm exec playwright install --with-deps
  *
- * Then run: npm run e2e:dev
+ * Then run: pnpm run e2e:dev
  */
 export default defineConfig({
   testDir: './e2e',
@@ -55,7 +55,7 @@ export default defineConfig({
   /* Start backend and frontend servers before running tests */
   webServer: [
     {
-      command: 'cd backend && npm run build && npm run migrate && npm run start',
+      command: 'cd backend && pnpm run build && pnpm run migrate && pnpm run start',
       env: {
         DATABASE_PATH: path.resolve(__dirname, 'backend/database/database.sqlite'),
       },
@@ -64,7 +64,7 @@ export default defineConfig({
       timeout: 120000,
     },
     {
-      command: 'cd frontend && npm run build && npm run start',
+      command: 'cd frontend && pnpm run build && pnpm run start',
       env: {
         NEXT_PUBLIC_BACKEND_ORIGIN: 'http://localhost:8001',
       },
