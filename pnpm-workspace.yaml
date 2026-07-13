@@ -1,0 +1,10 @@
+packages:
+  - backend
+  - frontend
+  - docs
+
+onlyBuiltDependencies:
+  - sqlite3
+  - bcrypt
+  - sharp
+  - esbuild

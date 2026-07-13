@@ -3,9 +3,9 @@ import { defineConfig, devices } from '@playwright/test';
 /**
  * Playwright config for Docker E2E tests.
  * Before running, ensure:
- *   - playwright is installed: npx playwright install --with-deps
+ *   - playwright is installed: pnpm exec playwright install --with-deps
  *
- * Then run: npm run e2e:docker
+ * Then run: pnpm run e2e:docker
  */
 export default defineConfig({
   testDir: './e2e',

@@ -1,4 +1,5 @@
 FROM node:20-alpine AS base
+RUN corepack enable && corepack prepare pnpm@10.34.4 --activate
 
 # Install dependencies only when needed
 FROM base AS deps
@@ -6,31 +7,27 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install root dependencies
-COPY package.json package-lock.json* ./
-RUN npm ci
-
-# Install frontend dependencies
-WORKDIR /app/frontend
-COPY frontend/package.json frontend/package-lock.json* ./
-RUN npm ci
-
-# Install backend dependencies
-WORKDIR /app/backend
-COPY backend/package.json backend/package-lock.json* ./
-RUN npm ci
+COPY pnpm-workspace.yaml pnpm-lock.yaml package.json ./
+COPY backend/package.json backend/
+COPY frontend/package.json frontend/
+COPY docs/package.json docs/
+RUN pnpm install --frozen-lockfile
 
 # Build frontend
 FROM base AS frontend-builder
 WORKDIR /app
 
-COPY package.json ./
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/frontend/node_modules ./frontend/node_modules
 COPY frontend ./frontend
 
 WORKDIR /app/frontend
-RUN npm run build
+RUN pnpm run build
+WORKDIR /app
+# De-symlink into a self-contained prod tree for the runner stage (entrypoint.js
+# imports next's server file by a hardcoded relative path, which needs real files).
+RUN pnpm --filter unittcms-frontend deploy --prod --legacy /app/frontend-deploy
 
 # Build backend
 FROM base AS backend-builder
@@ -41,13 +38,17 @@ ARG API_PATH=/api
 # Install jq for JSON manipulation
 RUN apk add --no-cache jq
 
+COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
+COPY --from=deps /app/node_modules ./node_modules
 COPY --from=deps /app/backend/node_modules ./backend/node_modules
 COPY backend ./backend
 
 WORKDIR /app/backend
 # Update tsoa.json spec.basePath with the API_PATH using jq
 RUN jq --arg path "$API_PATH" '.spec.basePath = $path' tsoa.json > tsoa.tmp && mv tsoa.tmp tsoa.json
-RUN npm run build
+RUN pnpm run build
+WORKDIR /app
+RUN pnpm --filter unittcms-backend deploy --prod --legacy /app/backend-deploy
 
 # Final production image
 FROM base AS runner
@@ -70,20 +71,18 @@ COPY --from=backend-builder /app/backend/public ./backend/public
 COPY --from=backend-builder /app/backend/config ./backend/config
 COPY --from=backend-builder /app/backend/migrations ./backend/migrations
 COPY --from=backend-builder /app/backend/seeders ./backend/seeders
+# Copy prod-only backend node_modules (real files, not pnpm symlinks)
+COPY --from=backend-builder /app/backend-deploy/node_modules ./backend/node_modules
 
 # Copy frontend build
 COPY --from=frontend-builder /app/frontend/.next/standalone ./
 COPY --from=frontend-builder /app/frontend/.next/static ./.next/static
 COPY --from=frontend-builder /app/frontend/public ./public
 
-# Copy Next.js module for the server
-COPY --from=deps /app/frontend/node_modules/next ./node_modules/next
-
-# Install backend production dependencies only
-WORKDIR /app/backend
-COPY backend/package.json backend/package-lock.json* ./
-RUN npm ci --omit=dev
-WORKDIR /app
+# Overlay the frontend's self-contained prod node_modules — the standalone
+# output's own node_modules only preserves pnpm's internal .pnpm store, not the
+# top-level symlinks (e.g. next, styled-jsx) Next's server needs at runtime.
+COPY --from=frontend-builder /app/frontend-deploy/node_modules ./node_modules
 
 ## remove .env
 RUN rm -f /app/frontend/.env && rm -f /app/backend/.env

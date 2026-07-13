@@ -3,13 +3,13 @@
 ### Install dependencies
 
 ```
-$ npm install
+$ pnpm install
 ```
 
 ### Start document server locally
 
 ```
-$ npm run start
+$ pnpm run start
 ```
 
 ## Deploy to Github pages
@@ -17,5 +17,5 @@ $ npm run start
 The following command builds the pages and then deploys them to GitHub Pages.
 
 ```
-$ npm run deploy
+$ pnpm run deploy
 ```
