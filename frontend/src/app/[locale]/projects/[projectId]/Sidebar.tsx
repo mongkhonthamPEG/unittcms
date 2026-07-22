@@ -31,6 +31,7 @@ export default function Sidebar({ messages, locale }: Props) {
   const TOGGLE_ICON_SIZE = 18;
   const ICON_STROKE_WIDTH = 1;
   const ICON_SIZE = 26;
+  const isExecuteMode = pathname.includes('/runs/') && pathname.endsWith('/execute');
 
   const handleClick = (key: string) => {
     if (key === 'home') {
@@ -91,6 +92,39 @@ export default function Sidebar({ messages, locale }: Props) {
       startContent: <Settings strokeWidth={ICON_STROKE_WIDTH} size={ICON_SIZE} />,
     },
   ];
+
+  if (isExecuteMode) {
+    return (
+      <nav
+        aria-label="Product navigation"
+        className="w-14 shrink-0 border-r-1 border-default-200 bg-white dark:border-[#2a2e35] dark:bg-[#16181c] py-3.5"
+      >
+        <div className="flex flex-col items-center gap-1">
+          {tabItems.map((itr) => {
+            const isActive = itr.key === currentKey;
+            return (
+              <Tooltip key={itr.key} content={itr.text} placement="right">
+                <button
+                  type="button"
+                  aria-label={itr.text}
+                  aria-current={isActive ? 'page' : undefined}
+                  onClick={() => handleClick(itr.key)}
+                  disabled={isActive}
+                  className={`flex h-[34px] w-[34px] items-center justify-center rounded-lg transition-colors [&>svg]:h-[18px] [&>svg]:w-[18px] ${
+                    isActive
+                      ? 'bg-neutral-100 text-foreground dark:bg-[#1c1f24]'
+                      : 'text-default-400 hover:bg-neutral-100 hover:text-foreground dark:hover:bg-[#1c1f24]'
+                  }`}
+                >
+                  {itr.startContent}
+                </button>
+              </Tooltip>
+            );
+          })}
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <div className="border-r-1 dark:border-neutral-700">

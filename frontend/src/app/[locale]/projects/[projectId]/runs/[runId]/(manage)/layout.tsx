@@ -14,6 +14,7 @@ export default function RunLayout({
   params: { projectId: string; runId: string; locale: string };
 }) {
   const t = useTranslations('Run');
+  const et = useTranslations('Execute');
   const messages: RunMessages = {
     backToRuns: t('back_to_runs'),
     updating: t('updating'),
@@ -60,6 +61,8 @@ export default function RunLayout({
     filterByAssignee: t('filter_by_assignee'),
     selectAssignee: t('select_assignee'),
     searchAssignee: t('search_assignee'),
+    startTesting: et('start_testing'),
+    continueTesting: et('continue_testing'),
   };
 
   const rst = useTranslations('RunStatus');

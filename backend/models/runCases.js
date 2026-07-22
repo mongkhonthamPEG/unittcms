@@ -32,6 +32,10 @@ function defineRunCase(sequelize, DataTypes) {
       foreignKey: 'commentableId',
       onDelete: 'CASCADE',
     });
+    RunCase.hasMany(models.RunCaseEvidence, {
+      foreignKey: 'runCaseId',
+      onDelete: 'CASCADE',
+    });
     RunCase.belongsTo(models.User, {
       as: 'assignee',
       foreignKey: 'assigneeUserId',

@@ -99,6 +99,8 @@ type RunMessages = {
   filterByAssignee: string;
   selectAssignee: string;
   searchAssignee: string;
+  startTesting: string;
+  continueTesting: string;
 };
 
 type RunDetailMessages = {

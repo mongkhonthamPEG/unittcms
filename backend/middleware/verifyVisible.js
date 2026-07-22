@@ -118,6 +118,41 @@ export default function verifyVisibleMiddleware(sequelize) {
     return res.status(403).json({ error: 'Forbidden' });
   }
 
+  /**
+   * Verify user can read project by runCaseId
+   * (have to be called after verifySignedIn() middleware)
+   */
+  async function verifyProjectVisibleFromRunCaseId(req, res, next) {
+    const RunCase = defineRunCase(sequelize, DataTypes);
+    const Run = defineRun(sequelize, DataTypes);
+
+    const runCaseId = req.params.runCaseId || req.query.runCaseId;
+    if (!runCaseId) {
+      return res.status(400).json({ error: 'runCaseId is required' });
+    }
+
+    // find project id from runCaseId via its run
+    const runCase = await RunCase.findByPk(runCaseId);
+    const runId = runCase && runCase.runId;
+    if (!runId) {
+      return res.status(404).send('failed to find runId');
+    }
+
+    const run = await Run.findByPk(runId);
+    const projectId = run && run.projectId;
+    if (!projectId) {
+      return res.status(404).send('failed to find projectId');
+    }
+
+    const visible = await isVisible(projectId, req.userId);
+    if (visible) {
+      next();
+      return;
+    }
+
+    return res.status(403).json({ error: 'Forbidden' });
+  }
+
   async function verifyProjectVisibleFromCommentableId(req, res, next) {
     const commentableType = req.params.commentableType || req.query.commentableType;
     const commentableId = req.params.commentableId || req.query.commentableId;
@@ -204,6 +239,7 @@ export default function verifyVisibleMiddleware(sequelize) {
     verifyProjectVisibleFromFolderId,
     verifyProjectVisibleFromCaseId,
     verifyProjectVisibleFromRunId,
+    verifyProjectVisibleFromRunCaseId,
     verifyProjectVisibleFromCommentableId,
   };
 }

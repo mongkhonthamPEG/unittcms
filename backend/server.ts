@@ -158,6 +158,18 @@ app.use('/runcases', runCaseIndexRoute(sequelize));
 app.use('/runcases', runCaseEditRoute(sequelize));
 app.use('/runcases', runCaseAssigneeRoute(sequelize));
 
+// "/runcaseevidence"
+import runCaseEvidenceIndexRoute from './routes/runcaseevidence/index.js';
+import runCaseEvidenceNewRoute from './routes/runcaseevidence/new.js';
+import runCaseEvidenceVideoRoute from './routes/runcaseevidence/video.js';
+import runCaseEvidenceDeleteRoute from './routes/runcaseevidence/delete.js';
+import runCaseEvidenceDownloadRoute from './routes/runcaseevidence/download.js';
+app.use('/runcaseevidence', runCaseEvidenceIndexRoute(sequelize));
+app.use('/runcaseevidence', runCaseEvidenceNewRoute(sequelize));
+app.use('/runcaseevidence', runCaseEvidenceVideoRoute(sequelize));
+app.use('/runcaseevidence', runCaseEvidenceDeleteRoute(sequelize));
+app.use('/runcaseevidence', runCaseEvidenceDownloadRoute(sequelize));
+
 // "/members"
 import membersIndexRoute from './routes/members/index.js';
 import membersNewRoute from './routes/members/new.js';

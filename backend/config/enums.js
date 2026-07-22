@@ -33,4 +33,7 @@ const automationStatus = ['automated', 'automation-not-required', 'cannot-be-aut
 // Templates
 const templates = ['text', 'step'];
 
-export { testRunCaseStatus, testRunStatus, priorities, testTypes, automationStatus, templates };
+// Kind of evidence attached to a run case execution
+const runCaseEvidenceKind = ['screenshot', 'videoLink'];
+
+export { testRunCaseStatus, testRunStatus, priorities, testTypes, automationStatus, templates, runCaseEvidenceKind };

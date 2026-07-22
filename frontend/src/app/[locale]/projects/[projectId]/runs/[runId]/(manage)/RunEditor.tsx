@@ -33,6 +33,7 @@ import {
   ChevronRight,
   Folder,
   Filter,
+  Play,
 } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { NodeApi, Tree } from 'react-arborist';
@@ -46,8 +47,8 @@ import {
   exportRun,
   assignRunCases,
   fetchProjectMembersForRun,
-} from '../runsControl';
-import { fetchFolders } from '../../folders/foldersControl';
+} from '../../runsControl';
+import { fetchFolders } from '../../../folders/foldersControl';
 import RunProgressChart from './RunPregressDonutChart';
 import TestCaseSelector from './TestCaseSelector';
 import AssigneePicker from './AssigneePicker';
@@ -119,6 +120,10 @@ export default function RunEditor({
   const [pendingAssignees, setPendingAssignees] = useState<Map<number, number | null>>(new Map());
   const router = useRouter();
   const isManager = tokenContext.isProjectManager(Number(projectId));
+  const hasIncludedCases = testCases.some((tc) => tc.RunCases && tc.RunCases.length > 0);
+  const hasTestingProgress = testCases.some(
+    (tc) => tc.RunCases && tc.RunCases.length > 0 && tc.RunCases[0].status !== 0
+  );
 
   // not show warning when navigating to test case detail page
   useFormGuard(isDirty, messages.areYouSureLeave, [`/projects/${projectId}/runs/${runId}/cases/\\d+`]);
@@ -418,6 +423,17 @@ export default function RunEditor({
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>
+          <Button
+            size="sm"
+            className="me-2"
+            color="secondary"
+            variant="flat"
+            isDisabled={!hasIncludedCases}
+            startContent={<Play size={16} />}
+            onPress={() => router.push(`/projects/${projectId}/runs/${runId}/execute`, { locale: locale })}
+          >
+            {hasTestingProgress ? messages.continueTesting : messages.startTesting}
+          </Button>
           <Button
             startContent={
               <Badge isInvisible={!isDirty} color="danger" size="sm" content="" shape="circle">

@@ -128,6 +128,8 @@ export default function (sequelize) {
                 'runId',
                 'status',
                 'assigneeUserId',
+                'createdAt',
+                'updatedAt',
                 [
                   sequelize.literal(
                     '(SELECT COUNT(*) FROM `comments` WHERE `comments`.`commentableType` = ' +

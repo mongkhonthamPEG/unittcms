@@ -26,20 +26,19 @@ export default function TreeItem({
   const selectedClass = `${baseClass} bg-neutral-200 dark:bg-neutral-700 dark:hover:bg-neutral-600 hover:bg-neutral-300`;
 
   return (
-    <div className="mx-2">
+    <div style={style} className="box-border overflow-hidden pr-2">
       <div
-        style={style}
         className={cn(
-          'w-full py-1 pr-2 flex items-center rounded-md cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-600',
+          'flex h-full w-full min-w-0 items-center overflow-hidden rounded-md py-1 pr-2 cursor-pointer transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-600',
           isSelected ? selectedClass : baseClass,
           className
         )}
         onClick={onClick}
       >
-        {toggleButton || <div className="ml-2" />}
-        {icon}
-        <span className="truncate ml-1.5">{label}</span>
-        {actions && <div className="ml-auto flex items-center">{actions}</div>}
+        <div className="shrink-0">{toggleButton || <div className="ml-2 w-6" />}</div>
+        <span className="shrink-0">{icon}</span>
+        <span className="ml-1.5 min-w-0 flex-1 truncate">{label}</span>
+        {actions && <div className="ml-2 flex shrink-0 items-center">{actions}</div>}
       </div>
     </div>
   );

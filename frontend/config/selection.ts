@@ -1,4 +1,10 @@
-import { AutomationStatusType, GlobalRoleType, MemberRoleType, TemplateType } from '@/types/base';
+import {
+  AutomationStatusType,
+  GlobalRoleType,
+  MemberRoleType,
+  TemplateType,
+  RunCaseEvidenceKindType,
+} from '@/types/base';
 import { RunStatusType, TestRunCaseStatusType } from '@/types/status';
 import { TestTypeType } from '@/types/testType';
 import { PriorityType } from '@/types/priority';
@@ -77,6 +83,9 @@ const automationStatus: AutomationStatusType[] = [
 
 const templates: TemplateType[] = [{ uid: 'text' }, { uid: 'step' }];
 
+// Kind of evidence attached to a run case execution
+const runCaseEvidenceKind: RunCaseEvidenceKindType[] = [{ uid: 'screenshot' }, { uid: 'videoLink' }];
+
 export {
   roles,
   memberRoles,
@@ -87,4 +96,5 @@ export {
   templates,
   testRunStatus,
   testRunCaseStatus,
+  runCaseEvidenceKind,
 };

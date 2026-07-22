@@ -19,3 +19,7 @@ export type AutomationStatusType = {
 export type TemplateType = {
   uid: 'text' | 'step';
 };
+
+export type RunCaseEvidenceKindType = {
+  uid: 'screenshot' | 'videoLink';
+};
